@@ -1,0 +1,17 @@
+{
+  "name": "clock-bot",
+  "version": "1.0.0",
+  "description": "clock bot for owop",
+  "main": "index.js",
+  "dependencies": {
+    "better-owop-js": "^1.0.2",
+    "canvas": "^2.6.1",
+    "moment": "^2.25.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "mathias377 and skylydev",
+  "license": "MIT"
+}
