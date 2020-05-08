@@ -40,31 +40,6 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-function removeAlphaFromImgData(data) {
-  if(data.length % 4 !== 0) throw new Error("Data is not image dat");
-
-  let newData = new Uint8Array(data.length - data.length/4);
-  for(let i = 0, i2 = 0; i < data.length;) {
-      newData[i++] = data[i2++];
-      newData[i++] = data[i2++];
-      newData[i++] = data[i2++];
-      i2++
-  }
-  return newData;
-}
-function addAlphaToData(data, alpha = 255) {
-  if(data.length % 3 !== 0) throw new Error("Data is not data ;-;");
-  let newData = new Uint8Array(data.length + data.length/3);
-
-  for(let i = 0, i2 = 0; i < newData.length;) {
-    newData[i++] = data[i2++];
-    newData[i++] = data[i2++];
-    newData[i++] = data[i2++];
-    newData[i++] = alpha;
-  }
-  return newData;
-}
-
 function lerp(color1, color2, factor) {
   if (arguments.length < 3) {
     factor = 0.5;
@@ -106,7 +81,7 @@ let background = readImage("./background.png");
 let gate = readImage("./gate.png")
 let lock = readImage("./lock.png")
 
-let gateEnabled = false //<--- gate
+let gateEnabled = true //<--- gate
 
 let fontOffsetX = 0;
 let fontChangeOffset = 16;
@@ -189,9 +164,9 @@ function generateClock(day1, day2, colon1, hour1, hour2, colon2, minute1, minute
   offsetX += clockOffsetXChange;
   
   if (gateEnabled) {
-    ctx.drawImage(gate, gateOffsetX, background.canvas.height)
-    if (hours == "00" && minutes == "00" && seconds == "00") {
-      ctx.drawImage(lock, gateOffsetX + lockOffsetX, background.canvas.height + lockOffsetY)
+    ctx.drawImage(gate.canvas, gateOffsetX, background.canvas.height)
+    if (hour1 == "0" && hour2 == "0" && minute1 == "0" && minute2 == "0" && day1 == "0" && day2 == "0") {
+      ctx.drawImage(lock.canvas, gateOffsetX + lockOffsetX, background.canvas.height + lockOffsetY)
     }
   }
 
