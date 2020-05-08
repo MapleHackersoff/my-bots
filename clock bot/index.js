@@ -103,6 +103,10 @@ function getImageFromContext(ctx, ...args) {
 
 let _font = readImage("./font.png");
 let background = readImage("./background.png");
+let gate = readImage("./gate.png")
+let lock = readImage("./lock.png")
+
+let gateEnabled = false //<--- gate
 
 let fontOffsetX = 0;
 let fontChangeOffset = 16;
@@ -148,13 +152,17 @@ fontOffsetX+=fontChangeOffset;
 }*/
 
 function generateClock(day1, day2, colon1, hour1, hour2, colon2, minute1, minute2) {
-  let canvas = new Canvas.Canvas(background.canvas.width, background.canvas.height);
+  let canvas = new Canvas.Canvas(background.canvas.width, gateEnabled ? background.canvas.height + gate.canvas.height : background.canvas.height);
   let ctx = canvas.getContext("2d");
   ctx.drawImage(background.canvas, 0, 0);
 
   let clockOffsetXChange = 18;
   let offsetX = 5;
   let offsetY = 2;
+  
+  let gateOffsetX = 59;
+  let lockOffsetX = 14;
+  let lockOffsetY = 12;
 
   ctx.drawImage(font[day1], offsetX, offsetY) // day1
   offsetX += clockOffsetXChange;
@@ -179,6 +187,13 @@ function generateClock(day1, day2, colon1, hour1, hour2, colon2, minute1, minute
 
   ctx.drawImage(font[minute2], offsetX, offsetY) // minute2
   offsetX += clockOffsetXChange;
+  
+  if (gateEnabled) {
+    ctx.drawImage(gate, gateOffsetX, background.canvas.height)
+    if (hours == "00" && minutes == "00" && seconds == "00") {
+      ctx.drawImage(lock, gateOffsetX + lockOffsetX, background.canvas.height + lockOffsetY)
+    }
+  }
 
   return ctx;
 }
