@@ -40,31 +40,6 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-function removeAlphaFromImgData(data) {
-  if(data.length % 4 !== 0) throw new Error("Data is not image dat");
-
-  let newData = new Uint8Array(data.length - data.length/4);
-  for(let i = 0, i2 = 0; i < data.length;) {
-      newData[i++] = data[i2++];
-      newData[i++] = data[i2++];
-      newData[i++] = data[i2++];
-      i2++
-  }
-  return newData;
-}
-function addAlphaToData(data, alpha = 255) {
-  if(data.length % 3 !== 0) throw new Error("Data is not data ;-;");
-  let newData = new Uint8Array(data.length + data.length/3);
-
-  for(let i = 0, i2 = 0; i < newData.length;) {
-    newData[i++] = data[i2++];
-    newData[i++] = data[i2++];
-    newData[i++] = data[i2++];
-    newData[i++] = alpha;
-  }
-  return newData;
-}
-
 function lerp(color1, color2, factor) {
   if (arguments.length < 3) {
     factor = 0.5;
@@ -103,6 +78,10 @@ function getImageFromContext(ctx, ...args) {
 
 let _font = readImage("./font.png");
 let background = readImage("./background.png");
+let gate = readImage("./gate.png")
+let lock = readImage("./lock.png")
+
+let gateEnabled = true //<--- gate
 
 let fontOffsetX = 0;
 let fontChangeOffset = 16;
@@ -148,13 +127,17 @@ fontOffsetX+=fontChangeOffset;
 }*/
 
 function generateClock(day1, day2, colon1, hour1, hour2, colon2, minute1, minute2) {
-  let canvas = new Canvas.Canvas(background.canvas.width, background.canvas.height);
+  let canvas = new Canvas.Canvas(background.canvas.width, gateEnabled ? background.canvas.height + gate.canvas.height : background.canvas.height);
   let ctx = canvas.getContext("2d");
   ctx.drawImage(background.canvas, 0, 0);
 
   let clockOffsetXChange = 18;
   let offsetX = 5;
   let offsetY = 2;
+  
+  let gateOffsetX = 59;
+  let lockOffsetX = 14;
+  let lockOffsetY = 12;
 
   ctx.drawImage(font[day1], offsetX, offsetY) // day1
   offsetX += clockOffsetXChange;
@@ -179,6 +162,13 @@ function generateClock(day1, day2, colon1, hour1, hour2, colon2, minute1, minute
 
   ctx.drawImage(font[minute2], offsetX, offsetY) // minute2
   offsetX += clockOffsetXChange;
+  
+  if (gateEnabled) {
+    ctx.drawImage(gate.canvas, gateOffsetX, background.canvas.height)
+    if (hour1 == "0" && hour2 == "0" && minute1 == "0" && minute2 == "0" && day1 == "0" && day2 == "0") {
+      ctx.drawImage(lock.canvas, gateOffsetX + lockOffsetX, background.canvas.height + lockOffsetY)
+    }
+  }
 
   return ctx;
 }
